@@ -5,7 +5,7 @@ class cRegistryHiveKeyNamedValue(object):
     assert xUnused is None, \
         "Constructor arguments must be named values!";
     assert sValueName is not None, \
-        "You must provide a valid value for sValueName, not %s" % repr(sValueName);
+        "You must provide a valid value for sValueName, not %s (use \"\" for default value)" % repr(sValueName);
     if oRegistryHiveKey is None:
       oRegistryHiveKey = cRegistryHiveKey(**dxRegistryHiveKeyArguments);
     else:
@@ -40,6 +40,13 @@ class cRegistryHiveKeyNamedValue(object):
   @property
   def sFullPath(oSelf):
     return "%s\\%s" % (oSelf.__oRegistryHiveKey.sFullPath, oSelf.sValueName);
+  
+  def fsToString(oSelf):
+    return "%s{path=%s}" % (oSelf.__class__.__name__, oSelf.sFullPath);
+  def __repr__(oSelf):
+    return "<%s %s>" % (oSelf.__class__.__name__, oSelf.sFullPath);
+  def __str__(oSelf):
+    return "%s %s" % (oSelf.__class__.__name__, oSelf.sFullPath);
 
 from .cRegistryHiveKey import cRegistryHiveKey;
 from .cRegistryValue import cRegistryValue;

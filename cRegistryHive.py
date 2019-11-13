@@ -81,7 +81,7 @@ class cRegistryHive(object):
       sKeyName = sKeyName,
       oRegistryHive = oSelf,
       oWinRegKey = oWinRegKey,
-      bWinRegKeyForWriting = bForWriting,
+      bWinRegKeyOpenForWriting = bForWriting,
     );
   
   def foOpenWinRegKey(oSelf, sKeyName, bForWriting = False, uRegistryBits = 0):
@@ -99,7 +99,7 @@ class cRegistryHive(object):
       sKeyName = sKeyName,
       oRegistryHive = oSelf,
       oWinRegKey = oWinRegKey,
-      bWinRegKeyForWriting = bForWriting,
+      bWinRegKeyOpenForWriting = bForWriting,
     );
   
   def fbDeleteHiveKeySubKey(oSelf, oHiveKey, sSubKeyName, uRegistryBits = 0):
@@ -117,5 +117,12 @@ class cRegistryHive(object):
   @property
   def sFullPath(oSelf):
     return oSelf.sHiveName;
+  
+  def fsToString(oSelf):
+    return "%s{path=%s}" % (oSelf.__class__.__name__, oSelf.sFullPath);
+  def __repr__(oSelf):
+    return "<%s %s>" % (oSelf.__class__.__name__, oSelf.sFullPath);
+  def __str__(oSelf):
+    return "%s %s" % (oSelf.__class__.__name__, oSelf.sFullPath);
 
 from .cRegistryHiveKey import cRegistryHiveKey;

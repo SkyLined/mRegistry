@@ -96,7 +96,7 @@ class cRegistryHiveKey(object):
   
   @property
   def aoSubKeys(oSelf):
-    doSubKey_by_sName = oSelf.doSubKey_by_sName();
+    doSubKey_by_sName = oSelf.doSubKey_by_sName;
     if doSubKey_by_sName is None:
       return None;
     return doSubKey_by_sName.values();
@@ -125,10 +125,10 @@ class cRegistryHiveKey(object):
     aoNamedValues = [];
     while 1:
       try:
-        (sValueName, xValue, uValueType) = _winreg.EnumValue(oWinRegKey, len(aoSubKeys));
+        (sValueName, xValue, uValueType) = _winreg.EnumValue(oWinRegKey, len(aoNamedValues));
       except WindowsError:
         return aoNamedValues;
-      aoNamedValues.append(cRegistryHiveKeyNamedValue(sValueName = oSelf.sValueName, oRegistryHiveKey = oSelf));
+      aoNamedValues.append(cRegistryHiveKeyNamedValue(sValueName = sValueName, oRegistryHiveKey = oSelf));
   
   @property
   def doValue_by_Name(oSelf):
@@ -138,9 +138,9 @@ class cRegistryHiveKey(object):
     doValue_by_Name = {};
     while 1:
       try:
-        (sValueName, xValue, uType) = _winreg_EnumValue(oWinRegKey, len(aoSubKeys));
+        (sValueName, xValue, uType) = _winreg.EnumValue(oWinRegKey, len(doValue_by_Name));
       except WindowsError:
-        return aoNamedValues;
+        return doValue_by_Name;
       doValue_by_Name[sValueName] = cRegistryValue(uType = uType, xValue = xValue);
   
   def foCreateNamedValue(oSelf, sValueName):
@@ -187,6 +187,13 @@ class cRegistryHiveKey(object):
   def sFullPath(oSelf):
     return "%s\\%s" % (oSelf.__oRegistryHive.sFullPath, oSelf.sKeyName);
   
+  def fsToString(oSelf):
+    return "%s{path=%s}" % (oSelf.__class__.__name__, oSelf.sFullPath);
+  def __repr__(oSelf):
+    return "<%s %s>" % (oSelf.__class__.__name__, oSelf.sFullPath);
+  def __str__(oSelf):
+    return "%s %s" % (oSelf.__class__.__name__, oSelf.sFullPath);
+
 from .cRegistryHive import cRegistryHive;
 from .cRegistryHiveKeyNamedValue import cRegistryHiveKeyNamedValue;
 from .cRegistryValue import cRegistryValue;
