@@ -70,7 +70,7 @@ class cRegistryHiveKey(object):
     return bSuccess;
   
   def fbDelete(oSelf):
-    for sName in oSelf.doSubKey_by_sName.keys():
+    for sSubKeyName in oSelf.doSubKey_by_sName.keys():
       oSelf.fbDeleteSubKey(sSubKeyName);
     return oSelf.oParentHiveKey.fbDeleteSubKey(oSelf.sKeyName);
   
