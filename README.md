@@ -1,0 +1,1 @@
+Access the Windows registry.
