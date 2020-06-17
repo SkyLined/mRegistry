@@ -1,52 +1,39 @@
-import json, os, sys;
+from fTestDependencies import fTestDependencies;
+fTestDependencies();
 
-# Augment the search path to make the test subject a package and have access to its modules folder.
-sTestsFolderPath = os.path.dirname(os.path.abspath(__file__));
-sMainFolderPath = os.path.dirname(sTestsFolderPath);
-sParentFolderPath = os.path.dirname(sMainFolderPath);
-sModulesFolderPath = os.path.join(sMainFolderPath, "modules");
-asOriginalSysPath = sys.path[:];
-sys.path = [sParentFolderPath, sModulesFolderPath] + asOriginalSysPath;
-# Load product details
-oProductDetailsFile = open(os.path.join(sMainFolderPath, "dxProductDetails.json"), "rb");
 try:
-  dxProductDetails = json.load(oProductDetailsFile);
-finally:
-  oProductDetailsFile.close();
-# Save the list of names of loaded modules:
-asOriginalModuleNames = sys.modules.keys();
+  import mDebugOutput;
+except:
+  mDebugOutput = None;
+try:
+  try:
+    from oConsole import oConsole;
+  except:
+    import sys, threading;
+    oConsoleLock = threading.Lock();
+    class oConsole(object):
+      @staticmethod
+      def fOutput(*txArguments, **dxArguments):
+        sOutput = "";
+        for x in txArguments:
+          if isinstance(x, (str, unicode)):
+            sOutput += x;
+        sPadding = dxArguments.get("sPadding");
+        if sPadding:
+          sOutput.ljust(120, sPadding);
+        oConsoleLock.acquire();
+        print sOutput;
+        sys.stdout.flush();
+        oConsoleLock.release();
+      fPrint = fOutput;
+      @staticmethod
+      def fStatus(*txArguments, **dxArguments):
+        pass;
+  
+  import sys;
+  #Import the test subject
+  import mRegistry;
 
-__import__(dxProductDetails["sProductName"], globals(), locals(), [], -1);
-
-# Sub-packages should load all modules relative, or they will end up in the global namespace, which means they may get
-# loaded by the script importing it if it tries to load a differnt module with the same name. Obviously, that script
-# will probably not function when the wrong module is loaded, so we need to check that we did this correctly.
-asUnexpectedModules = list(set([
-  sModuleName.lstrip("_").split(".", 1)[0] for sModuleName in sys.modules.keys()
-  if not (
-    sModuleName in asOriginalModuleNames # This was loaded before
-    or sModuleName.lstrip("_").split(".", 1)[0] in (
-      [dxProductDetails["sProductName"]] +
-      dxProductDetails["asDependentOnProductNames"] +
-      [
-        # These built-in modules are expected:
-        "collections", "ctypes", "gc", "heapq", "itertools", "keyword",
-        "msvcrt", "platform", "string", "strop", "struct", "subprocess",
-        "thread", "threading", "time", "winreg"
-      ]
-    )
-  )
-]));
-assert len(asUnexpectedModules) == 0, \
-      "Module(s) %s was/were unexpectedly loaded!" % ", ".join(sorted(asUnexpectedModules));
-
-#Import the test subject
-import mRegistry;
-
-# Restore the search path
-sys.path = asOriginalSysPath;
-
-if __name__ == "__main__":
   # Test registry access
   print "* Testing Registry access...";sys.stdout.flush();
   oTestRegistryValue = mRegistry.cRegistryValue(
@@ -124,4 +111,9 @@ if __name__ == "__main__":
   print oRegistryHiveKey.fbDeleteNamedValue(oRegistryHiveKeyNamedValue.sValueName)
   print oRegistryHiveKey.sFullPath;
   
+  print "+ Done.";
   
+except Exception as oException:
+  if mDebugOutput:
+    mDebugOutput.fTerminateWithException(oException, bShowStacksForAllThread = True);
+  raise;
