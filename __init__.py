@@ -1,7 +1,4 @@
-from cRegistryHive import cRegistryHive;
-from cRegistryHiveKey import cRegistryHiveKey;
-from cRegistryHiveKeyNamedValue import cRegistryHiveKeyNamedValue;
-from cRegistryValue import cRegistryValue;
+from .mRegistry import *;
 
 __all__ = [
   "cRegistryHive",
