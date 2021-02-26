@@ -89,7 +89,7 @@ class cRegistryHive(object):
     try:
       return _winreg.OpenKey(oSelf.oHive, sKeyName, 0, uAccessMask);
     except WindowsError, oWindowsError:
-      if oWindowsError.errno != WIN32_FROM_HRESULT(HRESULT(ERROR_FILE_NOT_FOUND)):
+      if oWindowsError.errno != ERROR_FILE_NOT_FOUND:
         raise;
       return None; # The key does not exist.
   
@@ -109,7 +109,7 @@ class cRegistryHive(object):
     try:
       _winreg.DeleteKey(oWinRegKey, sSubKeyName);
     except WindowsError, oWindowsError:
-      if oWindowsError.errno != WIN32_FROM_HRESULT(HRESULT(ERROR_FILE_NOT_FOUND)):
+      if oWindowsError.errno != ERROR_FILE_NOT_FOUND:
         raise;
       return False; # The value does not exist.
     return True;

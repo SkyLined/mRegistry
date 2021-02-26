@@ -153,7 +153,7 @@ class cRegistryHiveKey(object):
     try:
       xValue, uType = _winreg.QueryValueEx(oWinRegKey, sValueName);
     except WindowsError, oWindowsError:
-      if oWindowsError.errno == WIN32_FROM_HRESULT(HRESULT(ERROR_FILE_NOT_FOUND)):
+      if oWindowsError.errno == ERROR_FILE_NOT_FOUND:
         return None; # The value does not exist.
       raise;
     return cRegistryValue(uType = uType, xValue = xValue);
@@ -178,7 +178,7 @@ class cRegistryHiveKey(object):
     try:
       _winreg.DeleteValue(oWinRegKey, sValueName);
     except WindowsError, oWindowsError:
-      if oWindowsError.errno != WIN32_FROM_HRESULT(HRESULT(ERROR_FILE_NOT_FOUND)):
+      if oWindowsError.errno != ERROR_FILE_NOT_FOUND:
         raise;
       return False; # The value does not exist.
     return True;
