@@ -1,23 +1,27 @@
 {
-  "asDependentOnProductNames": [
+  "a0sDebugAdditionalProductNames": [
+    "mFileSystemItem",
+    "mDebugOutput",
+    "mNotProvided",
+    "mConsole"
+  ],
+  "a0sDependentOnProductNames": [
     "mWindowsSDK"
-  ], 
-  "asJavaScriptModuleNames": [], 
-  "asOptionalProductNames": [], 
-  "asPHPModuleNames": [], 
+  ],
   "asProductTypes": [
     "Python module"
-  ], 
-  "asPythonApplicationNames": [], 
-  "oProductVersion": "2021-04-15 11:36", 
-  "oRepository": {
-    "sBranch": "master", 
-    "sRepositoryName": "mRegistry", 
-    "sType": "GitHub", 
-    "sUserName": "SkyLined"
-  }, 
-  "sProductAuthor": "SkyLined", 
-  "sProductName": "mRegistry", 
-  "sProductURL": "https://github.com/SkyLined/mRegistry", 
-  "sPythonModuleName": "mRegistry"
+  ],
+  "o0Repository": {
+    "sStructureVersion": "2021-07-02 11:16",
+    "sType": "GitHub",
+    "sbBranch": "master",
+    "sbRepositoryName": "mRegistry",
+    "sbUserName": "SkyLined"
+  },
+  "oProductVersion": "2021-07-07 12:48",
+  "s0PythonModuleName": "mRegistry",
+  "sProductAuthor": "SkyLined",
+  "sProductName": "mRegistry",
+  "sStructureVersion": "2021-07-02 11:16",
+  "sb0ProductURL": "https://github.com/SkyLined/mRegistry"
 }

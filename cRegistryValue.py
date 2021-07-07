@@ -1,19 +1,19 @@
-import _winreg;
+import winreg;
 # There are more imports at the end that need to be there and not here to prevent import loops.
 
 gduType_by_sName = {
-  "REG_BINARY":                       _winreg.REG_BINARY,
-  "REG_DWORD":                        _winreg.REG_DWORD,
-  "REG_DWORD_LITTLE_ENDIAN":          _winreg.REG_DWORD_LITTLE_ENDIAN,
-  "REG_DWORD_BIG_ENDIAN":             _winreg.REG_DWORD_BIG_ENDIAN,
-  "REG_EXPAND_SZ":                    _winreg.REG_EXPAND_SZ,
-  "REG_LINK":                         _winreg.REG_LINK,
-  "REG_MULTI_SZ":                     _winreg.REG_MULTI_SZ,
-  "REG_NONE":                         _winreg.REG_NONE,
-  "REG_RESOURCE_LIST":                _winreg.REG_RESOURCE_LIST,
-  "REG_FULL_RESOURCE_DESCRIPTOR":     _winreg.REG_FULL_RESOURCE_DESCRIPTOR,
-  "REG_RESOURCE_REQUIREMENTS_LIST":   _winreg.REG_RESOURCE_REQUIREMENTS_LIST,
-  "REG_SZ":                           _winreg.REG_SZ,
+  "REG_BINARY":                       winreg.REG_BINARY,
+  "REG_DWORD":                        winreg.REG_DWORD,
+  "REG_DWORD_LITTLE_ENDIAN":          winreg.REG_DWORD_LITTLE_ENDIAN,
+  "REG_DWORD_BIG_ENDIAN":             winreg.REG_DWORD_BIG_ENDIAN,
+  "REG_EXPAND_SZ":                    winreg.REG_EXPAND_SZ,
+  "REG_LINK":                         winreg.REG_LINK,
+  "REG_MULTI_SZ":                     winreg.REG_MULTI_SZ,
+  "REG_NONE":                         winreg.REG_NONE,
+  "REG_RESOURCE_LIST":                winreg.REG_RESOURCE_LIST,
+  "REG_FULL_RESOURCE_DESCRIPTOR":     winreg.REG_FULL_RESOURCE_DESCRIPTOR,
+  "REG_RESOURCE_REQUIREMENTS_LIST":   winreg.REG_RESOURCE_REQUIREMENTS_LIST,
+  "REG_SZ":                           winreg.REG_SZ,
 };
 gdsName_by_uType = dict([(u, s) for (s, u) in gduType_by_sName.items()]);
 # Also add names without "REG_" prefix:

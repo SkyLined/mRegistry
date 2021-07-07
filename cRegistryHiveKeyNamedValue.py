@@ -31,11 +31,11 @@ class cRegistryHiveKeyNamedValue(object):
   
   # Getter/setter for oRegistryValue
   def foGet(oSelf):
-    return oSelf.__oRegistryHiveKey.foGetNamedValue(oSelf.sValueName);
+    return oSelf.__oRegistryHiveKey.foGetValueForName(oSelf.sValueName);
   def foSet(oSelf, oRegistryValue):
-    return oSelf.__oRegistryHiveKey.foSetNamedValue(oSelf.sValueName, oRegistryValue);
+    return oSelf.__oRegistryHiveKey.foSetValueForName(oSelf.sValueName, oRegistryValue);
   def fbDelete(oSelf):
-    return oSelf.__oRegistryHiveKey.fbDeleteNamedValue(oSelf.sValueName);
+    return oSelf.__oRegistryHiveKey.fbDeleteValueForName(oSelf.sValueName);
   
   @property
   def sFullPath(oSelf):

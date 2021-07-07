@@ -1,24 +1,24 @@
-import _winreg;
+import winreg;
 from mWindowsSDK import *;
 
 gduHive_by_sName = {
-  "HKCR":                             _winreg.HKEY_CLASSES_ROOT,
-  "HKEY_CLASSES_ROOT":                _winreg.HKEY_CLASSES_ROOT,
-  "HKCU":                             _winreg.HKEY_CURRENT_USER,
-  "HKEY_CURRENT_USER":                _winreg.HKEY_CURRENT_USER,
-  "HKLM":                             _winreg.HKEY_LOCAL_MACHINE,
-  "HKEY_LOCAL_MACHINE":               _winreg.HKEY_LOCAL_MACHINE,
-  "HKU":                              _winreg.HKEY_USERS,
-  "HKEY_USERS":                       _winreg.HKEY_USERS,
-  "HKCC":                             _winreg.HKEY_CURRENT_CONFIG,
-  "HKEY_CURRENT_CONFIG":              _winreg.HKEY_CURRENT_CONFIG,
+  "HKCR":                             winreg.HKEY_CLASSES_ROOT,
+  "HKEY_CLASSES_ROOT":                winreg.HKEY_CLASSES_ROOT,
+  "HKCU":                             winreg.HKEY_CURRENT_USER,
+  "HKEY_CURRENT_USER":                winreg.HKEY_CURRENT_USER,
+  "HKLM":                             winreg.HKEY_LOCAL_MACHINE,
+  "HKEY_LOCAL_MACHINE":               winreg.HKEY_LOCAL_MACHINE,
+  "HKU":                              winreg.HKEY_USERS,
+  "HKEY_USERS":                       winreg.HKEY_USERS,
+  "HKCC":                             winreg.HKEY_CURRENT_CONFIG,
+  "HKEY_CURRENT_CONFIG":              winreg.HKEY_CURRENT_CONFIG,
 };
 gdsName_by_uHive = {
-  _winreg.HKEY_CLASSES_ROOT:          "HKEY_CLASSES_ROOT",
-  _winreg.HKEY_CURRENT_USER:          "HKEY_CURRENT_USER",
-  _winreg.HKEY_LOCAL_MACHINE:         "HKEY_LOCAL_MACHINE",
-  _winreg.HKEY_USERS:                 "HKEY_USERS",
-  _winreg.HKEY_CURRENT_CONFIG:        "HKEY_CURRENT_CONFIG",
+  winreg.HKEY_CLASSES_ROOT:           "HKEY_CLASSES_ROOT",
+  winreg.HKEY_CURRENT_USER:           "HKEY_CURRENT_USER",
+  winreg.HKEY_LOCAL_MACHINE:          "HKEY_LOCAL_MACHINE",
+  winreg.HKEY_USERS:                  "HKEY_USERS",
+  winreg.HKEY_CURRENT_CONFIG:         "HKEY_CURRENT_CONFIG",
 };
 
 class cRegistryHive(object):
@@ -68,12 +68,12 @@ class cRegistryHive(object):
   @property
   def oHive(oSelf):
     if oSelf.__oHive is None:
-      oSelf.__oHive = _winreg.ConnectRegistry(None, oSelf.uHive);
+      oSelf.__oHive = winreg.ConnectRegistry(None, oSelf.uHive);
     return oSelf.__oHive;
 
   def foCreateWinRegKey(oSelf, sKeyName, bForWriting = False, uRegistryBits = 0):
-    uAccessMask = _winreg.KEY_READ | (bForWriting and _winreg.KEY_SET_VALUE or 0) | {32: _winreg.KEY_WOW64_32KEY, 64:_winreg.KEY_WOW64_64KEY}.get(uRegistryBits, 0);
-    return _winreg.CreateKeyEx(oSelf.oHive, sKeyName, 0, uAccessMask);
+    uAccessMask = winreg.KEY_READ | (bForWriting and winreg.KEY_SET_VALUE or 0) | {32: winreg.KEY_WOW64_32KEY, 64:winreg.KEY_WOW64_64KEY}.get(uRegistryBits, 0);
+    return winreg.CreateKeyEx(oSelf.oHive, sKeyName, 0, uAccessMask);
     
   def foCreateHiveKey(oSelf, sKeyName, bForWriting = False, uRegistryBits = 0):
     oWinRegKey = oSelf.foCreateWinRegKey(sKeyName, bForWriting = bForWriting, uRegistryBits = uRegistryBits);
@@ -85,10 +85,10 @@ class cRegistryHive(object):
     );
   
   def foOpenWinRegKey(oSelf, sKeyName, bForWriting = False, uRegistryBits = 0):
-    uAccessMask = _winreg.KEY_READ | (bForWriting and _winreg.KEY_SET_VALUE or 0) | {32: _winreg.KEY_WOW64_32KEY, 64:_winreg.KEY_WOW64_64KEY}.get(uRegistryBits, 0);
+    uAccessMask = winreg.KEY_READ | (bForWriting and winreg.KEY_SET_VALUE or 0) | {32: winreg.KEY_WOW64_32KEY, 64:winreg.KEY_WOW64_64KEY}.get(uRegistryBits, 0);
     try:
-      return _winreg.OpenKey(oSelf.oHive, sKeyName, 0, uAccessMask);
-    except WindowsError, oWindowsError:
+      return winreg.OpenKey(oSelf.oHive, sKeyName, 0, uAccessMask);
+    except WindowsError as oWindowsError:
       if oWindowsError.errno != ERROR_FILE_NOT_FOUND:
         raise;
       return None; # The key does not exist.
@@ -107,8 +107,8 @@ class cRegistryHive(object):
     if not oWinRegKey:
       return False;
     try:
-      _winreg.DeleteKey(oWinRegKey, sSubKeyName);
-    except WindowsError, oWindowsError:
+      winreg.DeleteKey(oWinRegKey, sSubKeyName);
+    except WindowsError as oWindowsError:
       if oWindowsError.errno != ERROR_FILE_NOT_FOUND:
         raise;
       return False; # The value does not exist.

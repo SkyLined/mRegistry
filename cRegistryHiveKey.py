@@ -1,4 +1,4 @@
-import _winreg;
+import winreg;
 from mWindowsSDK import *
 # There are more imports at the end that need to be there and not here to prevent import loops.
 
@@ -70,7 +70,7 @@ class cRegistryHiveKey(object):
     return bSuccess;
   
   def fbDelete(oSelf):
-    for sSubKeyName in oSelf.doSubKey_by_sName.keys():
+    for sSubKeyName in list(oSelf.doSubKey_by_sName.keys()):
       oSelf.fbDeleteSubKey(sSubKeyName);
     return oSelf.oParentHiveKey.fbDeleteSubKey(oSelf.sKeyName);
   
@@ -99,8 +99,8 @@ class cRegistryHiveKey(object):
     doSubKey_by_sName = oSelf.doSubKey_by_sName;
     if doSubKey_by_sName is None:
       return None;
-    return doSubKey_by_sName.values();
-
+    return list(doSubKey_by_sName.values());
+  
   @property
   def doSubKey_by_sName(oSelf):
     oWinRegKey = oSelf.__foOpenWinRegKey();
@@ -109,7 +109,7 @@ class cRegistryHiveKey(object):
     doSubKey_by_sName = {};
     while 1:
       try:
-        sSubKeyName = _winreg.EnumKey(oWinRegKey, len(doSubKey_by_sName));
+        sSubKeyName = winreg.EnumKey(oWinRegKey, len(doSubKey_by_sName));
       except WindowsError:
         return doSubKey_by_sName;
       doSubKey_by_sName[sSubKeyName] = cRegistryHiveKey(
@@ -125,7 +125,7 @@ class cRegistryHiveKey(object):
     aoNamedValues = [];
     while 1:
       try:
-        (sValueName, xValue, uValueType) = _winreg.EnumValue(oWinRegKey, len(aoNamedValues));
+        (sValueName, xValue, uValueType) = winreg.EnumValue(oWinRegKey, len(aoNamedValues));
       except WindowsError:
         return aoNamedValues;
       aoNamedValues.append(cRegistryHiveKeyNamedValue(sValueName = sValueName, oRegistryHiveKey = oSelf));
@@ -138,27 +138,38 @@ class cRegistryHiveKey(object):
     doValue_by_Name = {};
     while 1:
       try:
-        (sValueName, xValue, uType) = _winreg.EnumValue(oWinRegKey, len(doValue_by_Name));
+        (sValueName, xValue, uType) = winreg.EnumValue(oWinRegKey, len(doValue_by_Name));
       except WindowsError:
         return doValue_by_Name;
       doValue_by_Name[sValueName] = cRegistryValue(uType = uType, xValue = xValue);
   
   def foCreateNamedValue(oSelf, sValueName):
     return cRegistryHiveKeyNamedValue(sValueName = sValueName, oRegistryHiveKey = oSelf);
-  
-  def foGetNamedValue(oSelf, sValueName):
+  def fo0GetNamedValue(oSelf, sValueName):
     oWinRegKey = oSelf.__foOpenWinRegKey();
     if not oWinRegKey:
       return None;
     try:
-      xValue, uType = _winreg.QueryValueEx(oWinRegKey, sValueName);
-    except WindowsError, oWindowsError:
+      xValue, uType = winreg.QueryValueEx(oWinRegKey, sValueName);
+    except WindowsError as oWindowsError:
+      if oWindowsError.errno == ERROR_FILE_NOT_FOUND:
+        return None; # The value does not exist.
+      raise;
+    return cRegistryHiveKeyNamedValue(sValueName = sValueName, oRegistryHiveKey = oSelf);
+  
+  def foGetValueForName(oSelf, sValueName):
+    oWinRegKey = oSelf.__foOpenWinRegKey();
+    if not oWinRegKey:
+      return None;
+    try:
+      xValue, uType = winreg.QueryValueEx(oWinRegKey, sValueName);
+    except WindowsError as oWindowsError:
       if oWindowsError.errno == ERROR_FILE_NOT_FOUND:
         return None; # The value does not exist.
       raise;
     return cRegistryValue(uType = uType, xValue = xValue);
-
-  def foSetNamedValue(oSelf, sValueName, oRegistryValue = None, **dxRegistryValueArguments):
+  
+  def foSetValueForName(oSelf, sValueName, oRegistryValue = None, **dxRegistryValueArguments):
     if oRegistryValue is None:
       assert dxRegistryValueArguments, \
           "You must provide a value for either oRegistryValue or dxRegistryValueArguments";
@@ -166,18 +177,18 @@ class cRegistryHiveKey(object):
     oWinRegKey = oSelf.__foCreateWinRegKey(bForWriting = True);
     if not oWinRegKey:
       return None;
-    _winreg.SetValueEx(oWinRegKey, sValueName, 0, oRegistryValue.uType, oRegistryValue.xValue);
+    winreg.SetValueEx(oWinRegKey, sValueName, 0, oRegistryValue.uType, oRegistryValue.xValue);
     return oRegistryValue;
   
-  def fbDeleteNamedValue(oSelf, sValueName):
+  def fbDeleteValueForName(oSelf, sValueName):
     if not oSelf.bExists:
       return True; # The key does not exist.
     oWinRegKey = oSelf.__foOpenWinRegKey(bForWriting = True);
     if not oWinRegKey:
       return False; # Could not open the key.
     try:
-      _winreg.DeleteValue(oWinRegKey, sValueName);
-    except WindowsError, oWindowsError:
+      winreg.DeleteValue(oWinRegKey, sValueName);
+    except WindowsError as oWindowsError:
       if oWindowsError.errno != ERROR_FILE_NOT_FOUND:
         raise;
       return False; # The value does not exist.

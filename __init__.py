@@ -1,8 +1,4 @@
-from .mRegistry import *;
+from .fInitializeProduct import fInitializeProduct;
+fInitializeProduct();
 
-__all__ = [
-  "cRegistryHive",
-  "cRegistryHiveKey",
-  "cRegistryHiveKeyNamedValue",
-  "cRegistryValue",
-];
+from .mExports import *;
