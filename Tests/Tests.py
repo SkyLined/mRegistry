@@ -45,7 +45,7 @@ try:
   );
   oRegistryHiveKeyNamedValue = mRegistry.cRegistryHiveKeyNamedValue(
     sHiveName = "HKCU",
-    sKeyName = r"Software\SkyLined\mRegistry",
+    sKeyPath = "Software\\SkyLined\\mRegistry",
     sValueName = "Test value name",
   );
   assert oRegistryHiveKeyNamedValue.sValueName == "Test value name", \
@@ -54,8 +54,8 @@ try:
       "Unexpected registry hive key value path: %s" % oRegistryHiveKeyNamedValue.sFullPath;
   
   oRegistryHiveKey = oRegistryHiveKeyNamedValue.oRegistryHiveKey;
-  assert oRegistryHiveKey.sKeyName == "Software\SkyLined\mRegistry", \
-      "Unexpected registry hive key name: %s" % oRegistryHiveKey.sKeyName;
+  assert oRegistryHiveKey.sKeyPath == "Software\\SkyLined\\mRegistry", \
+      "Unexpected registry hive key name: %s" % oRegistryHiveKey.sKeyPath;
   assert oRegistryHiveKey.sFullPath == "HKEY_CURRENT_USER\Software\SkyLined\mRegistry", \
       "Unexpected registry hive key path: %s" % oRegistryHiveKey.sFullPath;
   

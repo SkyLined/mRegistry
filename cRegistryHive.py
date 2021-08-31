@@ -70,46 +70,48 @@ class cRegistryHive(object):
     if oSelf.__oHive is None:
       oSelf.__oHive = winreg.ConnectRegistry(None, oSelf.uHive);
     return oSelf.__oHive;
-
-  def foCreateWinRegKey(oSelf, sKeyName, bForWriting = False, uRegistryBits = 0):
+  
+  def foCreateWinRegKey(oSelf, sKeyPath, bForWriting = False, uRegistryBits = 0):
     uAccessMask = winreg.KEY_READ | (bForWriting and winreg.KEY_SET_VALUE or 0) | {32: winreg.KEY_WOW64_32KEY, 64:winreg.KEY_WOW64_64KEY}.get(uRegistryBits, 0);
-    return winreg.CreateKeyEx(oSelf.oHive, sKeyName, 0, uAccessMask);
+    return winreg.CreateKeyEx(oSelf.oHive, sKeyPath, 0, uAccessMask);
     
-  def foCreateHiveKey(oSelf, sKeyName, bForWriting = False, uRegistryBits = 0):
-    oWinRegKey = oSelf.foCreateWinRegKey(sKeyName, bForWriting = bForWriting, uRegistryBits = uRegistryBits);
+  def foCreateHiveKey(oSelf, sKeyPath, bForWriting = False, uRegistryBits = 0):
+    oWinRegKey = oSelf.foCreateWinRegKey(sKeyPath, bForWriting = bForWriting, uRegistryBits = uRegistryBits);
     return cRegistryHiveKey(
-      sKeyName = sKeyName,
+      sKeyPath = sKeyPath,
       oRegistryHive = oSelf,
       oWinRegKey = oWinRegKey,
       bWinRegKeyOpenForWriting = bForWriting,
     );
   
-  def foOpenWinRegKey(oSelf, sKeyName, bForWriting = False, uRegistryBits = 0):
+  def foOpenWinRegKey(oSelf, sKeyPath, bForWriting = False, uRegistryBits = 0, bThrowErrors = False):
     uAccessMask = winreg.KEY_READ | (bForWriting and winreg.KEY_SET_VALUE or 0) | {32: winreg.KEY_WOW64_32KEY, 64:winreg.KEY_WOW64_64KEY}.get(uRegistryBits, 0);
     try:
-      return winreg.OpenKey(oSelf.oHive, sKeyName, 0, uAccessMask);
+      return winreg.OpenKey(oSelf.oHive, sKeyPath, 0, uAccessMask);
     except WindowsError as oWindowsError:
-      if oWindowsError.errno != ERROR_FILE_NOT_FOUND:
+      if bThrowErrors or oWindowsError.errno != ERROR_FILE_NOT_FOUND:
         raise;
       return None; # The key does not exist.
   
-  def foOpenHiveKey(oSelf, sKeyName, bForWriting = False, uRegistryBits = 0):
-    oWinRegKey = oSelf.foOpenWinRegKey(sKeyName, bForWriting = bForWriting, uRegistryBits = uRegistryBits);
+  def foOpenHiveKey(oSelf, sKeyPath, bForWriting = False, uRegistryBits = 0, bThrowErrors = False):
+    oWinRegKey = oSelf.foOpenWinRegKey(sKeyPath, bForWriting = bForWriting, uRegistryBits = uRegistryBits, bThrowErrors = bThrowErrors);
     return oWinRegKey and cRegistryHiveKey(
-      sKeyName = sKeyName,
+      sKeyPath = sKeyPath,
       oRegistryHive = oSelf,
       oWinRegKey = oWinRegKey,
       bWinRegKeyOpenForWriting = bForWriting,
     );
   
-  def fbDeleteHiveKeySubKey(oSelf, oHiveKey, sSubKeyName, uRegistryBits = 0):
-    oWinRegKey = oSelf.foOpenWinRegKey(oHiveKey.sKeyName, bForWriting = True, uRegistryBits = uRegistryBits);
+  def fbDeleteHiveKeySubKey(oSelf, oHiveKey, sSubKeyName, uRegistryBits = 0, bThrowErrors = False):
+    oWinRegKey = oSelf.foOpenWinRegKey(oHiveKey.sKeyPath, bForWriting = True, uRegistryBits = uRegistryBits, bThrowErrors = bThrowErrors);
     if not oWinRegKey:
+      assert not bThrowErrors, \
+          "Unreachable code!?";
       return False;
     try:
       winreg.DeleteKey(oWinRegKey, sSubKeyName);
     except WindowsError as oWindowsError:
-      if oWindowsError.errno != ERROR_FILE_NOT_FOUND:
+      if bThrowErrors or oWindowsError.errno != ERROR_FILE_NOT_FOUND:
         raise;
       return False; # The value does not exist.
     return True;

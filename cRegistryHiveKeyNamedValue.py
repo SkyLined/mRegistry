@@ -4,7 +4,7 @@ class cRegistryHiveKeyNamedValue(object):
   def __init__(oSelf, xUnused = None, sValueName = None, oRegistryHiveKey = None, **dxRegistryHiveKeyArguments):
     assert xUnused is None, \
         "Constructor arguments must be named values!";
-    assert sValueName is not None, \
+    assert sValueName is not None and "\\" not in sValueName, \
         "You must provide a valid value for sValueName, not %s (use \"\" for default value)" % repr(sValueName);
     if oRegistryHiveKey is None:
       oRegistryHiveKey = cRegistryHiveKey(**dxRegistryHiveKeyArguments);
@@ -30,12 +30,12 @@ class cRegistryHiveKeyNamedValue(object):
     oSelf.__oRegistryHiveKey = oRegistryHiveKey;
   
   # Getter/setter for oRegistryValue
-  def foGet(oSelf):
-    return oSelf.__oRegistryHiveKey.foGetValueForName(oSelf.sValueName);
+  def foGet(oSelf, bThrowErrors = False):
+    return oSelf.__oRegistryHiveKey.foGetValueForName(oSelf.sValueName, bThrowErrors = bThrowErrors);
   def foSet(oSelf, oRegistryValue):
     return oSelf.__oRegistryHiveKey.foSetValueForName(oSelf.sValueName, oRegistryValue);
-  def fbDelete(oSelf):
-    return oSelf.__oRegistryHiveKey.fbDeleteValueForName(oSelf.sValueName);
+  def fbDelete(oSelf, bThrowErrors = False):
+    return oSelf.__oRegistryHiveKey.fbDeleteValueForName(oSelf.sValueName, bThrowErrors = bThrowErrors);
   
   @property
   def sFullPath(oSelf):
