@@ -79,22 +79,26 @@ try:
   
   assert oRegistryHiveKey.bExists, \
       "Expected %s to exist!" % oRegistryHiveKey;
-  oParentHiveKey = oRegistryHiveKey.oParentHiveKey;
-  assert oParentHiveKey.sFullPath == r"HKEY_CURRENT_USER\Software\SkyLined", \
-      "Unexpected parent hive key path: %s" % oParentHiveKey.sFullPath;
+  o0ParentHiveKey = oRegistryHiveKey.o0ParentHiveKey;
+  assert o0ParentHiveKey, \
+      "Unexpected lack of parent hive key!";
+  assert o0ParentHiveKey.sFullPath == r"HKEY_CURRENT_USER\Software\SkyLined", \
+      "Unexpected parent hive key path: %s" % o0ParentHiveKey.sFullPath;
   
-  for oParentSubHiveKey in oParentHiveKey.aoSubKeys:
+  for oParentSubHiveKey in o0ParentHiveKey.aoSubKeys:
     if oParentSubHiveKey.sFullPath == oRegistryHiveKey.sFullPath:
       break;
   else:
-    raise AssertionError("%s is missing from sub keys (%s)" % (oRegistryHiveKey, oParentHiveKey.aoSubKeys));
+    raise AssertionError("%s is missing from sub keys (%s)" % (oRegistryHiveKey, o0ParentHiveKey.aoSubKeys));
   oSubKey = oRegistryHiveKey.foCreateSubKey("Test key name");
   oSubKey2 = oRegistryHiveKey.foGetSubKey("Test key name");
   assert oSubKey.sFullPath == oSubKey2.sFullPath, \
       "Unexpected sub key path mismatch (%s vs %s)" % (oSubKey.sFullPath, oSubKey2.sFullPath);
-  assert oSubKey.oParentHiveKey.sFullPath == oRegistryHiveKey.sFullPath, \
+  assert oSubKey.o0ParentHiveKey, \
+      "Unexpected lack of parent hive key in sub key!";
+  assert oSubKey.o0ParentHiveKey.sFullPath == oRegistryHiveKey.sFullPath, \
       "Unexpected sub key parent path mismatch (%s vs %s)" % \
-      (oSubKey.oParentHiveKey.sFullPath, oRegistryHiveKey.sFullPath);
+      (oSubKey.o0ParentHiveKey.sFullPath, oRegistryHiveKey.sFullPath);
 
   assert oRegistryHiveKey.doSubKey_by_sName["Test key name"].sFullPath == oSubKey.sFullPath, \
       "Unexpected sub key path mismatch (%s vs %s)" % \
