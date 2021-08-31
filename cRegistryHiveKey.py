@@ -122,17 +122,16 @@ class cRegistryHiveKey(object):
       uRegistryBits = oSelf.__uRegistryBits,
     );
   
-  def foCreateSubKey(oSelf, sSubKeyName, bForWriting = False, bThrowErrors = False):
+  def foCreateSubKey(oSelf, sSubKeyName, bForWriting = False):
     return oSelf.__oRegistryHive.foCreateHiveKey(
-      "%s\\%s" % (oSelf.__sKeyPath, sSubKeyName),
+      sKeyPath = "%s\\%s" % (oSelf.__sKeyPath, sSubKeyName),
       bForWriting = bForWriting,
-      uRegistryBits = oSelf.__uRegistryBits,
-      bThrowErrors = bThrowErrors,
+      uRegistryBits = oSelf.__uRegistryBits
     );
   
   def foGetSubKey(oSelf, sSubKeyName):
     return cRegistryHiveKey(
-      sKeyName = "%s\\%s" % (oSelf.__sKeyPath, sSubKeyName),
+      sKeyPath = "%s\\%s" % (oSelf.__sKeyPath, sSubKeyName),
       oRegistryHive = oSelf.__oRegistryHive,
     );
   
