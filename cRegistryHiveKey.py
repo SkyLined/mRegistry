@@ -82,15 +82,14 @@ class cRegistryHiveKey(object):
   @property
   def bExists(oSelf):
     return oSelf.__fo0OpenWinRegKey() is not None;
-
-  def fbCreate(oSelf, bForWriting = False, bThrowErrors = False):
+  
+  def fbCreate(oSelf, bForWriting = False):
     if oSelf.bExists:
       return True;
     oSelf.__oWinRegKey = oSelf.__oRegistryHive.foCreateWinRegKey(
       oSelf.__sKeyPath,
       bForWriting = bForWriting,
       uRegistryBits = oSelf.__uRegistryBits,
-      bThrowErrors = bThrowErrors
     );
     bSuccess = oSelf.__oWinRegKey is not None;
     oSelf.__bKeyOpenForWriting = bSuccess and bForWriting;
