@@ -1,9 +1,9 @@
 {
   "a0sDebugAdditionalProductNames": [
-    "mFileSystemItem",
+    "mConsole",
     "mDebugOutput",
-    "mNotProvided",
-    "mConsole"
+    "mFileSystemItem",
+    "mNotProvided"
   ],
   "a0sDependentOnProductNames": [
     "mWindowsSDK"
@@ -18,7 +18,7 @@
     "sbRepositoryName": "mRegistry",
     "sbUserName": "SkyLined"
   },
-  "oProductVersion": "2021-08-31 18:14",
+  "oProductVersion": "2021-10-29 09:58",
   "s0PythonModuleName": "mRegistry",
   "sProductAuthor": "SkyLined",
   "sProductName": "mRegistry",
