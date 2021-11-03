@@ -198,6 +198,12 @@ class cRegistryHiveKey(object):
     return cRegistryHiveKeyNamedValue(sValueName = sValueName, oRegistryHiveKey = oSelf);
   
   def foGetValueForName(oSelf, sValueName, bThrowErrors = False):
+    o0RegistryValue = oSelf.fo0GetValueForName(sValueName, bThrowErrors = bThrowErrors);
+    assert o0RegistryValue, \
+        "No registry value found for name %s in key %s" % (sValueName, oSelf.sFullPath);
+    return o0RegistryValue;
+  
+  def fo0GetValueForName(oSelf, sValueName, bThrowErrors = False):
     o0WinRegKey = oSelf.__fo0OpenWinRegKey(bThrowErrors = bThrowErrors);
     if not o0WinRegKey:
       return None;

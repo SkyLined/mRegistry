@@ -34,6 +34,11 @@ class cRegistryValue(object):
     oRegistryHiveKeyNamedValue = cRegistryHiveKeyNamedValue(**dxRegistryHiveKeyNamedValueArguments);
     return oRegistryHiveKeyNamedValue.foGet();
   
+  @staticmethod
+  def fo0Get(**dxRegistryHiveKeyNamedValueArguments):
+    oRegistryHiveKeyNamedValue = cRegistryHiveKeyNamedValue(**dxRegistryHiveKeyNamedValueArguments);
+    return oRegistryHiveKeyNamedValue.fo0Get();
+  
   def __init__(oSelf, xUnused = None, uType = None, sTypeName = None, xValue = None):
     assert xUnused is None, \
         "Constructor arguments must be named values!";

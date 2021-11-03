@@ -32,6 +32,8 @@ class cRegistryHiveKeyNamedValue(object):
   # Getter/setter for oRegistryValue
   def foGet(oSelf, bThrowErrors = False):
     return oSelf.__oRegistryHiveKey.foGetValueForName(oSelf.sValueName, bThrowErrors = bThrowErrors);
+  def fo0Get(oSelf, bThrowErrors = False):
+    return oSelf.__oRegistryHiveKey.fo0GetValueForName(oSelf.sValueName, bThrowErrors = bThrowErrors);
   def foSet(oSelf, oRegistryValue):
     return oSelf.__oRegistryHiveKey.foSetValueForName(oSelf.sValueName, oRegistryValue);
   def fbDelete(oSelf, bThrowErrors = False):
