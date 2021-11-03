@@ -115,8 +115,14 @@ try:
   
   assert oRegistryHiveKeyNamedValue.fbDelete(), \
       "Could not delete named registry value";
-  assert oRegistryHiveKeyNamedValue.foGet() is None, \
+  assert oRegistryHiveKeyNamedValue.fo0Get() is None, \
       "Deleting named registry value failed!";
+  try:
+    oRegistryHiveKeyNamedValue.foGet();
+  except AssertionError:
+    pass;
+  else:
+    raise AssertionError("Deleting named registry value failed!");
   print(oRegistryHiveKey.foSetValueForName(oRegistryHiveKeyNamedValue.sValueName, oTestRegistryValue));
   print(oRegistryHiveKey.foGetValueForName(oRegistryHiveKeyNamedValue.sValueName))
   print(oRegistryHiveKey.fbDeleteValueForName(oRegistryHiveKeyNamedValue.sValueName))
