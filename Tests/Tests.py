@@ -59,9 +59,9 @@ try:
       "Unexpected registry hive key value path: %s" % oRegistryHiveKeyNamedValue.sFullPath;
   
   oRegistryHiveKey = oRegistryHiveKeyNamedValue.oRegistryHiveKey;
-  assert oRegistryHiveKey.sKeyPath == "Software\\SkyLined\\mRegistry", \
+  assert oRegistryHiveKey.sKeyPath == r"Software\SkyLined\mRegistry", \
       "Unexpected registry hive key name: %s" % oRegistryHiveKey.sKeyPath;
-  assert oRegistryHiveKey.sFullPath == "HKEY_CURRENT_USER\Software\SkyLined\mRegistry", \
+  assert oRegistryHiveKey.sFullPath == r"HKEY_CURRENT_USER\Software\SkyLined\mRegistry", \
       "Unexpected registry hive key path: %s" % oRegistryHiveKey.sFullPath;
   
   oRegistryHive = oRegistryHiveKey.oRegistryHive;
